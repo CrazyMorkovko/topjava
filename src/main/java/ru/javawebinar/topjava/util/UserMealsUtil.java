@@ -29,33 +29,30 @@ public class UserMealsUtil {
     }
 
     public static List<UserMealWithExcess> filteredByCycles(List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
-        Map<LocalDate, Integer> map = new HashMap<>();
-
+        Map<LocalDate, Integer> caloriesSum = new HashMap<>();
         meals.forEach(meal -> {
-            LocalDate time = meal.getDateTime().toLocalDate();
-            map.put(time, map.getOrDefault(time, 0) + meal.getCalories());
+            LocalDate mealDate = meal.getDateTime().toLocalDate();
+            caloriesSum.put(mealDate, caloriesSum.getOrDefault(mealDate, 0) + meal.getCalories());
         });
 
-        List<UserMealWithExcess> list = new ArrayList<>();
-
+        List<UserMealWithExcess> userMealWithExcesses = new ArrayList<>();
         meals.forEach(meal -> {
-            LocalDateTime time = meal.getDateTime();
-
-            if (TimeUtil.isBetweenHalfOpen(time.toLocalTime(), startTime, endTime)) {
-                list.add(new UserMealWithExcess(
-                        time,
+            LocalDateTime mealTime = meal.getDateTime();
+            if (TimeUtil.isBetweenHalfOpen(mealTime.toLocalTime(), startTime, endTime)) {
+                userMealWithExcesses.add(new UserMealWithExcess(
+                        mealTime,
                         meal.getDescription(),
                         meal.getCalories(),
-                        caloriesPerDay < map.get(time.toLocalDate())
+                        caloriesPerDay < caloriesSum.get(mealTime.toLocalDate())
                 ));
             }
         });
 
-        return list;
+        return userMealWithExcesses;
     }
 
     public static List<UserMealWithExcess> filteredByStreams(List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
-        Map<LocalDate, Integer> map = meals.stream()
+        Map<LocalDate, Integer> caloriesSum = meals.stream()
                 .collect(Collectors.groupingBy(
                         m -> m.getDateTime().toLocalDate(),
                         Collectors.summingInt(UserMeal::getCalories))
@@ -67,7 +64,7 @@ public class UserMealsUtil {
                         m.getDateTime(),
                         m.getDescription(),
                         m.getCalories(),
-                        caloriesPerDay < map.get(m.getDateTime().toLocalDate()))
+                        caloriesPerDay < caloriesSum.get(m.getDateTime().toLocalDate()))
                 )
                 .collect(Collectors.toList());
     }
