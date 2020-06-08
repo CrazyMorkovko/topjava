@@ -42,10 +42,9 @@ public class MealInMemoryDao implements MealDao {
     }
 
     @Override
-    public Meal update(int id, Meal meal) {
-        Meal mealWithId = new Meal(id, meal.getDateTime(), meal.getDescription(), meal.getCalories());
-        meals.put(id, mealWithId);
-        return mealWithId;
+    public Meal update(Meal meal) {
+        meals.put(meal.getId(), meal);
+        return meal;
     }
 
     @Override

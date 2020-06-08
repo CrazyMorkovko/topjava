@@ -67,19 +67,21 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        log.debug("redirect to meals");
         request.setCharacterEncoding("UTF-8");
 
         String id = request.getParameter("id");
         Meal meal = new Meal(
-                LocalDateTime.parse(request.getParameter("dateTime"), DateTimeFormatter.ISO_LOCAL_DATE_TIME),
+                id == null ? 0 : Integer.parseInt(id),
+                LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
                 Integer.parseInt(request.getParameter("calories"))
         );
         if (id == null) {
             mealDao.add(meal);
+            log.debug("create new meal");
         } else {
-            mealDao.update(Integer.parseInt(id), meal);
+            mealDao.update(meal);
+            log.debug("update meal");
         }
 
         response.sendRedirect("meals");
