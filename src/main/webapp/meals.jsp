@@ -16,7 +16,6 @@
         <th>Date and Time</th>
         <th>Description</th>
         <th>Calories</th>
-        <th>Excess</th>
         <th>Actions</th>
     </tr>
     </thead>
@@ -27,7 +26,6 @@
             <td>${dateTimeFormatter.format(meal.getDateTime())}</td>
             <td>${meal.getDescription()}</td>
             <td>${meal.getCalories()}</td>
-            <td>${meal.isExcess()}</td>
             <td>
                 <a href="meals?action=edit&id=${meal.getId()}">Edit</a>
                 <a href="meals?action=delete&id=${meal.getId()}">Remove</a>

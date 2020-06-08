@@ -8,19 +8,17 @@
 </head>
 <body>
 <form method="POST" action='meals'>
-    <c:if test="${meal != null}">
-        <label for="id">Meal ID</label>
-        <input id="id" type="number" readonly="readonly" name="id" value="${meal != null ? meal.id : ""}">
-        <br>
+    <c:if test="${meal.id != 0}">
+        <input type="hidden" readonly="readonly" name="id" value="${meal.id}">
     </c:if>
     <label for="dateTime">Date and Time</label>
-    <input id="dateTime" type="datetime-local" name="dateTime" value="${meal != null ? meal.dateTime : ""}">
+    <input id="dateTime" type="datetime-local" name="dateTime" value="${meal.dateTime}">
     <br>
     <label for="description">Description</label>
-    <input id="description" type="text" name="description" value="${meal != null ? meal.description : ""}">
+    <input id="description" type="text" name="description" value="${meal.description}">
     <br>
     <label for="calories">Calories</label>
-    <input id="calories" type="number" name="calories" value="${meal != null ? meal.calories : ""}">
+    <input id="calories" type="number" name="calories" value="${meal.calories}">
     <br>
     <button type="submit">Save</button>
 </form>

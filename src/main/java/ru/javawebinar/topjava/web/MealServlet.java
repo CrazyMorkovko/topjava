@@ -20,10 +20,10 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(MealServlet.class);
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-    private static final DateTimeFormatter parser = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-    private final MealDao mealDao;
+    private MealDao mealDao;
 
-    public MealServlet() {
+    @Override
+    public void init() {
         mealDao = new MealInMemoryDao();
     }
 
@@ -38,7 +38,7 @@ public class MealServlet extends HttpServlet {
         switch (action.toLowerCase()) {
             case "create": {
                 template = "/meals/manage.jsp";
-                request.setAttribute("meal", null);
+                request.setAttribute("meal", new Meal(LocalDateTime.now(), "", 0));
                 break;
             }
             case "edit": {
@@ -66,27 +66,22 @@ public class MealServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         log.debug("redirect to meals");
         request.setCharacterEncoding("UTF-8");
 
         String id = request.getParameter("id");
-        Meal meal;
+        Meal meal = new Meal(
+                LocalDateTime.parse(request.getParameter("dateTime"), DateTimeFormatter.ISO_LOCAL_DATE_TIME),
+                request.getParameter("description"),
+                Integer.parseInt(request.getParameter("calories"))
+        );
         if (id == null) {
-            meal = mealDao.add(
-                    LocalDateTime.parse(request.getParameter("dateTime"), parser),
-                    request.getParameter("description"),
-                    Integer.parseInt(request.getParameter("calories"))
-            );
+            mealDao.add(meal);
         } else {
-            meal = mealDao.update(
-                    Integer.parseInt(id),
-                    LocalDateTime.parse(request.getParameter("dateTime"), parser),
-                    request.getParameter("description"),
-                    Integer.parseInt(request.getParameter("calories"))
-            );
+            mealDao.update(Integer.parseInt(id), meal);
         }
 
-        response.sendRedirect("meals?action=edit&id=" + meal.getId());
+        response.sendRedirect("meals");
     }
 }
