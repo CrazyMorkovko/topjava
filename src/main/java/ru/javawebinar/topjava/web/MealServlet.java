@@ -34,6 +34,7 @@ public class MealServlet extends HttpServlet {
             action = "";
         }
 
+        log.debug("Action: " + action);
         String template = "/meals.jsp";
         switch (action.toLowerCase()) {
             case "create": {
@@ -60,7 +61,6 @@ public class MealServlet extends HttpServlet {
             }
         }
 
-        log.debug("redirect to meals");
         request.setAttribute("dateTimeFormatter", formatter);
         request.getRequestDispatcher(template).forward(request, response);
     }
