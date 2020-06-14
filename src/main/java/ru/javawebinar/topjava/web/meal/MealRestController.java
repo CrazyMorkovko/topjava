@@ -16,7 +16,7 @@ import java.util.List;
 
 @Controller
 public class MealRestController {
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+    private static final Logger log = LoggerFactory.getLogger(MealRestController.class);
     private final MealService service;
 
     public MealRestController(MealService service) {
@@ -33,23 +33,42 @@ public class MealRestController {
         );
     }
 
-    public List<MealTo> getAll(LocalDate startDate, LocalDate endDate) {
-        log.info("getAllWithFilterByDate");
-        return MealsUtil.getFilteredTos(
-                service.getAll(SecurityUtil.authUserId(), startDate, endDate),
-                SecurityUtil.authUserCaloriesPerDay(),
-                LocalTime.MIN,
-                LocalTime.MAX
-        );
-    }
+    public List<MealTo> getAllByDateTime(String startDate, String endDate, String startTime, String endTime) {
+        log.info("getAllWithFilterByDateTime");
 
-    public List<MealTo> getAll(LocalTime startTime, LocalTime endTime) {
-        log.info("getAllWithFilterByDate");
+        LocalDate startD = LocalDate.MIN;
+        try {
+            startD = LocalDate.parse(startDate);
+        } catch (Exception ignored) {
+
+        }
+
+        LocalDate endD = LocalDate.MAX;
+        try {
+            endD = LocalDate.parse(endDate);
+        } catch (Exception ignored) {
+
+        }
+
+        LocalTime startT = LocalTime.MIN;
+        try {
+            startT = LocalTime.parse(startTime);
+        } catch (Exception ignored) {
+
+        }
+
+        LocalTime endT = LocalTime.MAX;
+        try {
+            endT = LocalTime.parse(endTime);
+        } catch (Exception ignored) {
+
+        }
+
         return MealsUtil.getFilteredTos(
-                service.getAll(SecurityUtil.authUserId(), startTime, endTime),
+                service.getAllByDate(SecurityUtil.authUserId(), startD, endD),
                 SecurityUtil.authUserCaloriesPerDay(),
-                LocalTime.MIN,
-                LocalTime.MAX
+                startT,
+                endT
         );
     }
 
@@ -59,9 +78,9 @@ public class MealRestController {
     }
 
     public Meal create(Meal meal) {
-        log.info("create {}", meal);
         ValidationUtil.checkNew(meal);
-        return service.create(meal);
+        log.info("create {}", meal);
+        return service.create(meal, SecurityUtil.authUserId());
     }
 
     public void delete(int id) {
@@ -70,8 +89,8 @@ public class MealRestController {
     }
 
     public void update(Meal meal, int id) {
-        log.info("update {} with id={}", meal, id);
         ValidationUtil.assureIdConsistent(meal, id);
-        service.update(meal);
+        log.info("update {} with id={}", meal, id);
+        service.update(meal, SecurityUtil.authUserId());
     }
 }

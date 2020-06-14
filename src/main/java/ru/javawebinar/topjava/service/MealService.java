@@ -6,8 +6,7 @@ import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.ValidationUtil;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.Collection;
+import java.util.List;
 
 @Service
 public class MealService {
@@ -17,7 +16,7 @@ public class MealService {
         this.repository = repository;
     }
 
-    public Collection<Meal> getAll(Integer userId) {
+    public List<Meal> getAll(Integer userId) {
         return repository.getAll(userId);
     }
 
@@ -25,23 +24,19 @@ public class MealService {
         return ValidationUtil.checkNotFoundWithId(repository.get(id, userId), id);
     }
 
-    public Meal create(Meal meal) {
-        return repository.save(meal);
+    public Meal create(Meal meal, Integer userId) {
+        return repository.save(meal, userId);
     }
 
     public void delete(int id, int userId) {
         ValidationUtil.checkNotFoundWithId(repository.delete(id, userId), id);
     }
 
-    public void update(Meal meal) {
-        ValidationUtil.checkNotFoundWithId(repository.save(meal), meal.getId());
+    public void update(Meal meal, Integer userId) {
+        ValidationUtil.checkNotFoundWithId(repository.save(meal, userId), meal.getId());
     }
 
-    public Collection<Meal> getAll(int userId, LocalDate startDate, LocalDate endDate) {
-        return repository.getAll(userId, startDate, endDate);
-    }
-
-    public Collection<Meal> getAll(int userId, LocalTime startTime, LocalTime endTime) {
-        return repository.getAll(userId, startTime, endTime);
+    public List<Meal> getAllByDate(int userId, LocalDate startDate, LocalDate endDate) {
+        return repository.getAllByDate(userId, startDate, endDate);
     }
 }

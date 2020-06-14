@@ -13,9 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
@@ -45,8 +43,7 @@ public class MealServlet extends HttpServlet {
                 id.isEmpty() ? null : Integer.valueOf(id),
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
-                Integer.parseInt(request.getParameter("calories")),
-                SecurityUtil.authUserId()
+                Integer.parseInt(request.getParameter("calories"))
         );
 
         log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
@@ -78,51 +75,21 @@ public class MealServlet extends HttpServlet {
                         new Meal(
                                 LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES),
                                 "",
-                                1000,
-                                SecurityUtil.authUserId()
+                                1000
                         ) :
                         mealRestController.get(getId(request));
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
                 break;
             }
-            case "filter-by-date": {
-                log.info("getAllWithFilterByDate");
-
-                LocalDate start = LocalDate.MIN;
-                try {
-                    start = LocalDate.parse(request.getParameter("startDate"));
-                } catch (Exception ignored) {
-
-                }
-                LocalDate end = LocalDate.MAX;
-                try {
-                    end = LocalDate.parse(request.getParameter("endDate"));
-                } catch (Exception ignored) {
-
-                }
-
-                request.setAttribute("meals", mealRestController.getAll(start, end));
-                request.getRequestDispatcher("/meals.jsp").forward(request, response);
-                break;
-            }
-            case "filter-by-time": {
-                log.info("getAllWithFilterByTime");
-
-                LocalTime start = LocalTime.MIN;
-                try {
-                    start = LocalTime.parse(request.getParameter("startTime"));
-                } catch (Exception ignored) {
-
-                }
-                LocalTime end = LocalTime.MAX;
-                try {
-                    end = LocalTime.parse(request.getParameter("endTime"));
-                } catch (Exception ignored) {
-
-                }
-
-                request.setAttribute("meals", mealRestController.getAll(start, end));
+            case "filter": {
+                log.info("getAllWithFilter");
+                request.setAttribute("meals", mealRestController.getAllByDateTime(
+                        request.getParameter("startDate"),
+                        request.getParameter("endDate"),
+                        request.getParameter("startTime"),
+                        request.getParameter("endTime")
+                ));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
             }

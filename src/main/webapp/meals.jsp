@@ -24,7 +24,7 @@
     <a href="meals?action=create">Add Meal</a>
     <br>
     <form action="meals">
-        <input type="hidden" value="filter-by-date" name="action">
+        <input type="hidden" value="filter" name="action">
         <div>
             <label for="startDate">От даты (включая)</label>
             <input type="date" name="startDate" id="startDate" autocomplete="off" value="${param.startDate}">
@@ -33,11 +33,6 @@
             <label for="endDate">До даты (включая)</label>
             <input type="date" name="endDate" id="endDate" autocomplete="off" value="${param.endDate}">
         </div>
-        <button type="submit">Filter by Date</button>
-    </form>
-
-    <form action="meals">
-        <input type="hidden" value="filter-by-time" name="action">
         <div>
             <label for="startTime">От времени (включая)</label>
             <input type="time" name="startTime" id="startTime" autocomplete="off" value="${param.startTime}">
@@ -46,7 +41,7 @@
             <label for="endTime">До времени (исключая)</label>
             <input type="time" name="endTime" id="endTime" autocomplete="off" value="${param.endTime}">
         </div>
-        <button type="submit">Filter by Time</button>
+        <button type="submit">Filter</button>
     </form>
     <br>
     <table border="1" cellpadding="8" cellspacing="0">
