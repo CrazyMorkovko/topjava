@@ -24,7 +24,7 @@ public class MealService {
         return ValidationUtil.checkNotFoundWithId(repository.get(id, userId), id);
     }
 
-    public Meal create(Meal meal, Integer userId) {
+    public Meal create(Meal meal, int userId) {
         return repository.save(meal, userId);
     }
 
@@ -32,7 +32,7 @@ public class MealService {
         ValidationUtil.checkNotFoundWithId(repository.delete(id, userId), id);
     }
 
-    public void update(Meal meal, Integer userId) {
+    public void update(Meal meal, int userId) {
         ValidationUtil.checkNotFoundWithId(repository.save(meal, userId), meal.getId());
     }
 

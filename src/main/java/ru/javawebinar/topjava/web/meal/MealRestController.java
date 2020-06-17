@@ -33,42 +33,17 @@ public class MealRestController {
         );
     }
 
-    public List<MealTo> getAllByDateTime(String startDate, String endDate, String startTime, String endTime) {
+    public List<MealTo> getAllByDateTime(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
         log.info("getAllWithFilterByDateTime");
-
-        LocalDate startD = LocalDate.MIN;
-        try {
-            startD = LocalDate.parse(startDate);
-        } catch (Exception ignored) {
-
-        }
-
-        LocalDate endD = LocalDate.MAX;
-        try {
-            endD = LocalDate.parse(endDate);
-        } catch (Exception ignored) {
-
-        }
-
-        LocalTime startT = LocalTime.MIN;
-        try {
-            startT = LocalTime.parse(startTime);
-        } catch (Exception ignored) {
-
-        }
-
-        LocalTime endT = LocalTime.MAX;
-        try {
-            endT = LocalTime.parse(endTime);
-        } catch (Exception ignored) {
-
-        }
-
         return MealsUtil.getFilteredTos(
-                service.getAllByDate(SecurityUtil.authUserId(), startD, endD),
+                service.getAllByDate(
+                        SecurityUtil.authUserId(),
+                        startDate == null ? LocalDate.MIN : startDate,
+                        startDate == null ? LocalDate.MAX : endDate
+                ),
                 SecurityUtil.authUserCaloriesPerDay(),
-                startT,
-                endT
+                startTime == null ? LocalTime.MIN : startTime,
+                endTime == null ? LocalTime.MAX : endTime
         );
     }
 

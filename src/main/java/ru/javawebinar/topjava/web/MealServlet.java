@@ -13,7 +13,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
@@ -84,12 +86,35 @@ public class MealServlet extends HttpServlet {
             }
             case "filter": {
                 log.info("getAllWithFilter");
-                request.setAttribute("meals", mealRestController.getAllByDateTime(
-                        request.getParameter("startDate"),
-                        request.getParameter("endDate"),
-                        request.getParameter("startTime"),
-                        request.getParameter("endTime")
-                ));
+
+                LocalDate startDate = null;
+                try {
+                    startDate = LocalDate.parse(request.getParameter("startDate"));
+                } catch (Exception ignored) {
+                }
+
+                LocalDate endDate = null;
+                try {
+                    endDate = LocalDate.parse(request.getParameter("endDate"));
+                } catch (Exception ignored) {
+                }
+
+                LocalTime startTime = null;
+                try {
+                    startTime = LocalTime.parse(request.getParameter("startTime"));
+                } catch (Exception ignored) {
+                }
+
+                LocalTime endTime = null;
+                try {
+                    endTime = LocalTime.parse(request.getParameter("endTime"));
+                } catch (Exception ignored) {
+                }
+
+                request.setAttribute(
+                        "meals",
+                        mealRestController.getAllByDateTime(startDate, endDate, startTime, endTime)
+                );
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
             }
