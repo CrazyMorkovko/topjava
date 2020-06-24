@@ -50,7 +50,6 @@ public class MealServiceTest {
 
     @Test
     public void getWithIncorrectUser() {
-        assertMatch(service.get(MEAL_ID, USER_ID), MEAL_1_1);
         assertThrows(NotFoundException.class, () -> service.get(MEAL_ID, ANOTHER_USER_ID));
     }
 
@@ -67,7 +66,6 @@ public class MealServiceTest {
 
     @Test
     public void deletedWithIncorrectUser() {
-        assertMatch(service.get(MEAL_ID, USER_ID), MEAL_1_1);
         assertThrows(NotFoundException.class, () -> service.delete(MEAL_ID, ANOTHER_USER_ID));
     }
 
@@ -81,7 +79,7 @@ public class MealServiceTest {
     }
 
     @Test
-    public void getBetweenInclusiveWithIncorrectUser() {
+    public void getBetweenInclusiveWithAnotherUser() {
         assertMatch(service.getBetweenInclusive(
                 LocalDate.of(2020, Month.JANUARY, 30),
                 LocalDate.of(2020, Month.JANUARY, 30),
@@ -95,7 +93,7 @@ public class MealServiceTest {
     }
 
     @Test
-    public void getAllWithIncorrectUser() {
+    public void getAllWithAnotherUser() {
         assertMatch(service.getAll(ANOTHER_USER_ID), MEAL_6_2, MEAL_5_2, MEAL_4_2, MEAL_3_2, MEAL_2_2, MEAL_1_2);
     }
 
@@ -108,7 +106,6 @@ public class MealServiceTest {
 
     @Test
     public void updateWithIncorrectUser() {
-        assertMatch(service.get(MEAL_ID, USER_ID), MEAL_1_1);
         assertThrows(NotFoundException.class, () -> service.update(getUpdated(), ANOTHER_USER_ID));
     }
 
