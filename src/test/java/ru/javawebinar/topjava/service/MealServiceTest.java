@@ -1,7 +1,14 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.AfterClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestRule;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
@@ -12,6 +19,8 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestData.*;
@@ -25,9 +34,33 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
+    private static final Logger logger = LoggerFactory.getLogger(MealServiceTest.class);
+    private static final List<String> testResult = new ArrayList<>();
 
     @Autowired
     private MealService service;
+
+    @Rule
+    public TestRule watcher = new TestWatcher() {
+        private long start;
+
+        @Override
+        protected void starting(Description description) {
+            start = System.currentTimeMillis();
+        }
+
+        @Override
+        protected void finished(Description description) {
+            String info = "Test " + description.getMethodName() + " took " + (System.currentTimeMillis() - start) + "ms";
+            testResult.add(info);
+            logger.debug(info);
+        }
+    };
+
+    @AfterClass
+    public static void printResultOfTest() {
+        testResult.forEach(logger::debug);
+    }
 
     @Test
     public void delete() throws Exception {
