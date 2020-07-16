@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import ru.javawebinar.topjava.model.Meal;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,8 +17,9 @@ import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalDate;
 import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 
 @Controller
+@RequestMapping("/meals")
 public class JspMealController extends AbstractMealController {
-    @GetMapping("/meals")
+    @GetMapping
     public String getMeals(HttpServletRequest request, Model model) {
         String action = request.getParameter("action");
         if (action != null && action.equals("filter")) {
@@ -33,27 +35,27 @@ public class JspMealController extends AbstractMealController {
         return "meals";
     }
 
-    @GetMapping("/meals/delete")
+    @GetMapping("/delete")
     public String deleteMeal(HttpServletRequest request) {
         this.delete(getId(request));
         return "redirect:/meals";
     }
 
-    @GetMapping("/meals/create")
+    @GetMapping("/create")
     public String createMeal(Model model) {
         model.addAttribute("meal", new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000));
         model.addAttribute("isCreate", true);
         return "mealForm";
     }
 
-    @GetMapping("/meals/update")
+    @GetMapping("/update")
     public String updateMeal(HttpServletRequest request, Model model) {
         model.addAttribute("meal", this.get(getId(request)));
         model.addAttribute("isCreate", false);
         return "mealForm";
     }
 
-    @PostMapping("/meals")
+    @PostMapping
     public String updateOrCreateMeal(HttpServletRequest request) {
         Meal meal = new Meal(
                 LocalDateTime.parse(request.getParameter("dateTime")),
