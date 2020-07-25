@@ -13,14 +13,16 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
-import ru.javawebinar.topjava.repository.JdbcUtil;
 import ru.javawebinar.topjava.repository.UserRepository;
+import ru.javawebinar.topjava.util.ValidationUtil;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
 
 @Repository
 @Transactional(readOnly = true)
@@ -42,8 +44,8 @@ public class JdbcUserRepository implements UserRepository {
     @Override
     @Transactional
     public User save(User user) {
+        ValidationUtil.isValid(user);
         BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(user);
-        JdbcUtil.isValid(user);
 
         if (user.isNew()) {
             user.setId(insertUser.executeAndReturnKey(parameterSource).intValue());
@@ -61,19 +63,19 @@ public class JdbcUserRepository implements UserRepository {
         return user;
     }
 
-    public void batchInsert(User user, List<Role> roles) {
+    private void batchInsert(User user, List<Role> roles) {
         this.jdbcTemplate.batchUpdate(
-            "INSERT INTO user_roles (user_id, role) VALUES (?, ?)",
-            new BatchPreparedStatementSetter() {
-                public void setValues(PreparedStatement ps, int i) throws SQLException {
-                    ps.setInt(1, user.getId());
-                    ps.setString(2, roles.get(i).toString());
-                }
+                "INSERT INTO user_roles (user_id, role) VALUES (?, ?)",
+                new BatchPreparedStatementSetter() {
+                    public void setValues(PreparedStatement ps, int i) throws SQLException {
+                        ps.setInt(1, user.getId());
+                        ps.setString(2, roles.get(i).toString());
+                    }
 
-                public int getBatchSize() {
-                    return roles.size();
+                    public int getBatchSize() {
+                        return roles.size();
+                    }
                 }
-            }
         );
     }
 
@@ -85,15 +87,16 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public User get(int id) {
-        List<User> users = jdbcTemplate.query("SELECT * FROM users WHERE id = ?", ROW_MAPPER, id);
-        return loadRoles(DataAccessUtils.singleResult(users));
+        return loadRoles(DataAccessUtils.singleResult(
+                jdbcTemplate.query("SELECT * FROM users WHERE id = ?", ROW_MAPPER, id)
+        ));
     }
 
     @Override
     public User getByEmail(String email) {
-//        return jdbcTemplate.queryForObject("SELECT * FROM users WHERE email=?", ROW_MAPPER, email);
-        List<User> users = jdbcTemplate.query("SELECT * FROM users WHERE email = ?", ROW_MAPPER, email);
-        return loadRoles(DataAccessUtils.singleResult(users));
+        return loadRoles(DataAccessUtils.singleResult(
+                jdbcTemplate.query("SELECT * FROM users WHERE email = ?", ROW_MAPPER, email)
+        ));
     }
 
     @Override
@@ -120,21 +123,20 @@ public class JdbcUserRepository implements UserRepository {
 
     private User loadRoles(User user) {
         if (user != null) {
-            List<Map<String, Object>> roles = jdbcTemplate.queryForList(
-                    "SELECT * FROM user_roles WHERE user_id = ?",
+            user.setRoles(jdbcTemplate.queryForList(
+                    "SELECT role FROM user_roles WHERE user_id = ?",
+                    Role.class,
                     user.getId()
-            );
-            user.setRoles(roles.stream()
-                    .map(map -> Role.valueOf((String) map.get("role")))
-                    .collect(Collectors.toList()));
+            ));
         }
 
         return user;
     }
 
-    public static class UserMapper implements RowMapper<User> {
+    private static class UserMapper implements RowMapper<User> {
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
             User user = new User();
+
             user.setId(rs.getInt("id"));
             user.setName(rs.getString("name"));
             user.setEmail(rs.getString("email"));

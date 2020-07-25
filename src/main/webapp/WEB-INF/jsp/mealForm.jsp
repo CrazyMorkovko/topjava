@@ -9,7 +9,7 @@
 <br>
 <section>
     <h2>
-        <spring:message code="${isCreate ? 'meal.form.create' : 'meal.form.update'}"/>
+        <spring:message code="${meal.id == null ? 'meal.form.create' : 'meal.form.update'}"/>
     </h2>
     <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
     <form method="post" action="${pageContext.request.contextPath}/meals">

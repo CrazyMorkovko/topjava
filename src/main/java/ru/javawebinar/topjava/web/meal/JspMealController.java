@@ -20,43 +20,43 @@ import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 @RequestMapping("/meals")
 public class JspMealController extends AbstractMealController {
     @GetMapping
-    public String getMeals(HttpServletRequest request, Model model) {
+    public String getAll(HttpServletRequest request, Model model) {
         String action = request.getParameter("action");
+
         if (action != null && action.equals("filter")) {
-            model.addAttribute("meals", this.getBetween(
+            model.addAttribute("meals", getBetween(
                     parseLocalDate(request.getParameter("startDate")),
                     parseLocalTime(request.getParameter("startTime")),
                     parseLocalDate(request.getParameter("endDate")),
                     parseLocalTime(request.getParameter("endTime"))
             ));
         } else {
-            model.addAttribute("meals", this.getAll());
+            model.addAttribute("meals", getAll());
         }
+
         return "meals";
     }
 
     @GetMapping("/delete")
-    public String deleteMeal(HttpServletRequest request) {
-        this.delete(getId(request));
+    public String delete(HttpServletRequest request) {
+        delete(getId(request));
         return "redirect:/meals";
     }
 
     @GetMapping("/create")
-    public String createMeal(Model model) {
+    public String create(Model model) {
         model.addAttribute("meal", new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000));
-        model.addAttribute("isCreate", true);
         return "mealForm";
     }
 
     @GetMapping("/update")
-    public String updateMeal(HttpServletRequest request, Model model) {
-        model.addAttribute("meal", this.get(getId(request)));
-        model.addAttribute("isCreate", false);
+    public String update(HttpServletRequest request, Model model) {
+        model.addAttribute("meal", get(getId(request)));
         return "mealForm";
     }
 
     @PostMapping
-    public String updateOrCreateMeal(HttpServletRequest request) {
+    public String updateOrCreate(HttpServletRequest request) {
         Meal meal = new Meal(
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
@@ -64,9 +64,9 @@ public class JspMealController extends AbstractMealController {
         );
 
         if (StringUtils.isEmpty(request.getParameter("id"))) {
-            this.create(meal);
+            create(meal);
         } else {
-            this.update(meal, getId(request));
+            update(meal, getId(request));
         }
 
         return "redirect:/meals";
