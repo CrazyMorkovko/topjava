@@ -1,11 +1,19 @@
 package ru.javawebinar.topjava.util;
 
-
 import ru.javawebinar.topjava.model.AbstractBaseEntity;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import java.util.Set;
+
 public class ValidationUtil {
+    private static final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+
     private ValidationUtil() {
+
     }
 
     public static <T> T checkNotFoundWithId(T object, int id) {
@@ -35,7 +43,6 @@ public class ValidationUtil {
     }
 
     public static void assureIdConsistent(AbstractBaseEntity entity, int id) {
-//      conservative when you reply, but accept liberally (http://stackoverflow.com/a/32728226/548473)
         if (entity.isNew()) {
             entity.setId(id);
         } else if (entity.id() != id) {
@@ -43,7 +50,6 @@ public class ValidationUtil {
         }
     }
 
-    //  http://stackoverflow.com/a/28565320/548473
     public static Throwable getRootCause(Throwable t) {
         Throwable result = t;
         Throwable cause;
@@ -51,6 +57,15 @@ public class ValidationUtil {
         while (null != (cause = result.getCause()) && (result != cause)) {
             result = cause;
         }
+
         return result;
+    }
+
+    public static <T> void isValid(T entity) {
+        Set<ConstraintViolation<T>> violations = validator.validate(entity);
+
+        if (violations.size() > 0) {
+            throw new ConstraintViolationException(violations);
+        }
     }
 }
