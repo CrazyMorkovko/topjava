@@ -58,6 +58,33 @@ public class MealRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    void getBetweenWithNull() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "filter"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(MEAL_TO_MATCHER.contentJson(MealsUtil.getFilteredTos(
+                        mealService.getBetweenInclusive(null, null, USER_ID),
+                        MealsUtil.DEFAULT_CALORIES_PER_DAY,
+                        null,
+                        null
+                )));
+    }
+
+    @Test
+    void getBetweenWithEmpty() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "filter?startDate=" + "&endDate=" + "&startTime="
+                + "&endTime="))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(MEAL_TO_MATCHER.contentJson(MealsUtil.getFilteredTos(
+                        mealService.getBetweenInclusive(null, null, USER_ID),
+                        MealsUtil.DEFAULT_CALORIES_PER_DAY,
+                        null,
+                        null
+                )));
+    }
+
+    @Test
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL + MEAL1_ID))
                 .andDo(print())
