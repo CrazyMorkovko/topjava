@@ -1,34 +1,34 @@
 $(function () {
     let ctx = {
-        ajaxUrl: "profile/meals/",
+        ajaxUrl: 'profile/meals/',
         filterUrl: null,
-        datatableApi: $("#datatable").DataTable({
-            "paging": false,
-            "info": true,
-            "columns": [
+        datatableApi: $('#datatable').DataTable({
+            'paging': false,
+            'info': true,
+            'columns': [
                 {
-                    "data": "dateTime"
+                    'data': 'dateTime'
                 },
                 {
-                    "data": "description",
-                    "orderable": false
+                    'data': 'description',
+                    'orderable': false
                 },
                 {
-                    "data": "calories"
+                    'data': 'calories'
                 },
                 {
-                    "defaultContent": "Edit",
-                    "orderable": false
+                    'defaultContent': 'Edit',
+                    'orderable': false
                 },
                 {
-                    "defaultContent": "Delete",
-                    "orderable": false
+                    'defaultContent': 'Delete',
+                    'orderable': false
                 }
             ],
-            "order": [
+            'order': [
                 [
                     0,
-                    "asc"
+                    'asc'
                 ]
             ]
         })
@@ -36,18 +36,18 @@ $(function () {
 
     makeEditable(ctx);
 
-    $(".filter").click(function (e) {
+    $('.filter').click(function (e) {
         e.preventDefault();
         ctx.filterUrl = ctx.ajaxUrl + 'filter?' + $(this).closest('form').serialize();
 
         updateTable();
     });
 
-    $(".reset").click(function (e) {
+    $('.reset').click(function (e) {
         e.preventDefault();
         ctx.filterUrl = null;
 
-        $(this).closest('form').find("input[type=date], input[type=time]").val("");
+        $(this).closest('form').find('input[type=date], input[type=time]').val('');
         updateTable();
     });
 });

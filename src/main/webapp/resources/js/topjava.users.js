@@ -1,38 +1,38 @@
 $(function () {
     let ctx = {
-        ajaxUrl: "admin/users/",
-        datatableApi: $("#datatable").DataTable({
-            "paging": false,
-            "info": true,
-            "columns": [
+        ajaxUrl: 'admin/users/',
+        datatableApi: $('#datatable').DataTable({
+            'paging': false,
+            'info': true,
+            'columns': [
                 {
-                    "data": "name"
+                    'data': 'name'
                 },
                 {
-                    "data": "email"
+                    'data': 'email'
                 },
                 {
-                    "data": "roles"
+                    'data': 'roles'
                 },
                 {
-                    "data": "enabled"
+                    'data': 'enabled'
                 },
                 {
-                    "data": "registered"
+                    'data': 'registered'
                 },
                 {
-                    "defaultContent": "Edit",
-                    "orderable": false
+                    'defaultContent': 'Edit',
+                    'orderable': false
                 },
                 {
-                    "defaultContent": "Delete",
-                    "orderable": false
+                    'defaultContent': 'Delete',
+                    'orderable': false
                 }
             ],
-            "order": [
+            'order': [
                 [
                     0,
-                    "asc"
+                    'asc'
                 ]
             ]
         })
