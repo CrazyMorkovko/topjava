@@ -1,13 +1,14 @@
-let context, form;
+let context, form, failedNote;
 
 function makeEditable(ctx) {
     context = ctx;
     form = $('#detailsForm');
-    $(".delete").click(function (e) {
+
+    $('.delete').click(function (e) {
         e.preventDefault();
 
         if (confirm('Are you sure?')) {
-            deleteRow($(this).closest("tr").attr("id"));
+            deleteRow($(this).closest('tr').attr('id'));
         }
     });
 
@@ -15,44 +16,41 @@ function makeEditable(ctx) {
         failNotification(jqXHR);
     });
 
-    // solve problem with cache in IE: https://stackoverflow.com/a/4303862/548473
     $.ajaxSetup({cache: false});
 }
 
 function add() {
-    form.find(":input").val("");
-    $("#editRow").modal();
+    form.find(':input').val('');
+    $('#editRow').modal();
 }
 
 function deleteRow(id) {
     $.ajax({
         url: context.ajaxUrl + id,
-        type: "DELETE"
+        type: 'DELETE'
     }).done(function () {
         updateTable();
-        successNotification("Deleted");
+        successNotification('Deleted');
     });
 }
 
 function updateTable() {
-    $.get(context.ajaxUrl, function (data) {
+    $.get(context.filterUrl ? context.filterUrl : context.ajaxUrl, function (data) {
         context.datatableApi.clear().rows.add(data).draw();
     });
 }
 
 function save() {
     $.ajax({
-        type: "POST",
+        type: 'POST',
         url: context.ajaxUrl,
         data: form.serialize()
     }).done(function () {
-        $("#editRow").modal("hide");
+        $('#editRow').modal('hide');
         updateTable();
-        successNotification("Saved");
+        successNotification('Saved');
     });
 }
-
-let failedNote;
 
 function closeNotification() {
     if (failedNote) {
@@ -66,7 +64,7 @@ function successNotification(text) {
     new Noty({
         text: "<span class='fa fa-lg fa-check'></span> &nbsp;" + text,
         type: 'success',
-        layout: "bottomRight",
+        layout: 'bottomRight',
         timeout: 1000
     }).show();
 }
@@ -75,7 +73,7 @@ function failNotification(jqXHR) {
     closeNotification();
     failedNote = new Noty({
         text: "<span class='fa fa-lg fa-exclamation-circle'></span> &nbsp;Error status: " + jqXHR.status,
-        type: "error",
-        layout: "bottomRight"
+        type: 'error',
+        layout: 'bottomRight'
     }).show();
 }
