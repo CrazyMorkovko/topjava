@@ -1,24 +1,20 @@
 $(function () {
     let ctx = {
-        ajaxUrl: 'admin/users/',
+        ajaxUrl: 'profile/meals/',
+        filterUrl: null,
         datatableApi: $('#datatable').DataTable({
             'paging': false,
             'info': true,
             'columns': [
                 {
-                    'data': 'name'
+                    'data': 'dateTime'
                 },
                 {
-                    'data': 'email'
+                    'data': 'description',
+                    'orderable': false
                 },
                 {
-                    'data': 'roles'
-                },
-                {
-                    'data': 'enabled'
-                },
-                {
-                    'data': 'registered'
+                    'data': 'calories'
                 },
                 {
                     'defaultContent': 'Edit',
@@ -40,16 +36,18 @@ $(function () {
 
     makeEditable(ctx);
 
-    $('.user-checkbox').change(function () {
-        $.ajax({
-            type: 'POST',
-            url: ctx.ajaxUrl + $(this).closest('tr').attr('id'),
-            data: {
-                enabled: $(this).prop('checked')
-            }
-        }).done(function () {
-            updateTable();
-            successNotification('Saved');
-        });
-    })
+    $('.filter').click(function (e) {
+        e.preventDefault();
+        ctx.filterUrl = ctx.ajaxUrl + 'filter?' + $(this).closest('form').serialize();
+
+        updateTable();
+    });
+
+    $('.reset').click(function (e) {
+        e.preventDefault();
+        ctx.filterUrl = null;
+
+        $(this).closest('form').find('input[type=date], input[type=time]').val('');
+        updateTable();
+    });
 });
