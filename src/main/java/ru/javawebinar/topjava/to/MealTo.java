@@ -22,6 +22,7 @@ public class MealTo extends BaseTo implements Serializable {
     @Size(min = 2, max = 120, message = "length must be between 2 and 120 characters")
     private final String description;
 
+    @NotNull
     @Range(min = 10, max = 5000)
     private final Integer calories;
 
