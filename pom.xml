@@ -28,6 +28,7 @@
 
         <!--DB-->
         <postgresql.version>42.2.14</postgresql.version>
+
         <!--    Tests  -->
         <junit.jupiter.version>5.6.2</junit.jupiter.version>
         <assertj.version>3.16.1</assertj.version>
@@ -65,7 +66,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <!--https://junit.org/junit5/docs/current/user-guide/#running-tests-build-maven -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.2</version>
@@ -74,8 +74,6 @@
                 </configuration>
             </plugin>
 
-            <!-- http://stackoverflow.com/questions/4305935/is-it-possible-to-supply-tomcat6s-context-xml-file-via-the-maven-cargo-plugin#4417945 -->
-            <!-- https://codehaus-cargo.github.io/cargo/Tomcat+9.x.html -->
             <plugin>
                 <groupId>org.codehaus.cargo</groupId>
                 <artifactId>cargo-maven2-plugin</artifactId>
@@ -190,7 +188,6 @@
             <version>${hibernate.version}</version>
         </dependency>
 
-        <!--http://hibernate.org/validator/documentation/getting-started/#unified-expression-language-el-->
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>javax.el</artifactId>
@@ -211,7 +208,6 @@
             <version>${ehcache.version}</version>
         </dependency>
 
-        <!--https://medium.com/criciumadev/its-time-migrating-to-java-11-5eb3868354f9-->
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
@@ -253,7 +249,6 @@
                     <artifactId>jquery</artifactId>
                 </exclusion>
                 <exclusion>
-<!--                https://getbootstrap.com/docs/4.5/components/popovers         -->
                     <groupId>org.webjars</groupId>
                     <artifactId>popper.js</artifactId>
                 </exclusion>
@@ -378,7 +373,6 @@
         </profile>
         <profile>
             <id>heroku</id>
-            <!--https://devcenter.heroku.com/articles/java-webapp-runner            -->
             <build>
                 <plugins>
                     <plugin>
@@ -393,7 +387,6 @@
                                 </goals>
                                 <configuration>
                                     <artifactItems>
-                                        <!--https://github.com/jsimone/webapp-runner#using-without-memcached-or-redis-->
                                         <artifactItem>
                                             <groupId>com.heroku</groupId>
                                             <artifactId>webapp-runner-main</artifactId>

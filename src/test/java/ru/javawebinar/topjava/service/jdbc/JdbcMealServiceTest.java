@@ -7,4 +7,5 @@ import static ru.javawebinar.topjava.Profiles.JDBC;
 
 @ActiveProfiles(JDBC)
 class JdbcMealServiceTest extends AbstractMealServiceTest {
+
 }

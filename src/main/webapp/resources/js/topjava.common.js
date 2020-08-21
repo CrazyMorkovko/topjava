@@ -1,9 +1,8 @@
-var ajaxUrl, datatableApi, updateTable, form;
+let ajaxUrl, datatableApi, updateTable, form;
 
 function makeEditable(aUrl, datatableOpts, upTable) {
     ajaxUrl = aUrl;
     datatableApi = $("#datatable").DataTable(
-        // https://api.jquery.com/jquery.extend/#jQuery-extend-deep-target-object1-objectN
         $.extend(true, datatableOpts,
             {
                 "ajax": {
@@ -26,8 +25,8 @@ function makeEditable(aUrl, datatableOpts, upTable) {
     // solve problem with cache in IE: https://stackoverflow.com/a/4303862/548473
     $.ajaxSetup({cache: false});
 
-    var token = $("meta[name='_csrf']").attr("content");
-    var header = $("meta[name='_csrf_header']").attr("content");
+    const token = $("meta[name='_csrf']").attr("content");
+    const header = $("meta[name='_csrf_header']").attr("content");
     $(document).ajaxSend(function (e, xhr, options) {
         xhr.setRequestHeader(header, token);
     });
@@ -78,7 +77,7 @@ function save() {
     });
 }
 
-var failedNote;
+let failedNote;
 
 function closeNoty() {
     if (failedNote) {
@@ -99,7 +98,7 @@ function successNoty(key) {
 
 function failNoty(jqXHR) {
     closeNoty();
-    var errorInfo = JSON.parse(jqXHR.responseText);
+    const errorInfo = JSON.parse(jqXHR.responseText);
     failedNote = new Noty({
         text: "<span class='fa fa-lg fa-exclamation-circle'></span> &nbsp;" + errorInfo.typeMessage + "<br>" + errorInfo.details.join("<br>"),
         type: "error",

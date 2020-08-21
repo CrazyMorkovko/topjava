@@ -10,7 +10,6 @@ import static ru.javawebinar.topjava.UserTestData.ADMIN;
 import static ru.javawebinar.topjava.UserTestData.USER;
 
 class RootControllerTest extends AbstractControllerTest {
-
     @Test
     void getUsers() throws Exception {
         perform(get("/users")
