@@ -10,8 +10,10 @@ import javax.validation.constraints.Size;
 
 import static org.hibernate.validator.constraints.SafeHtml.WhiteListType.NONE;
 
+
 @MappedSuperclass
 public abstract class AbstractNamedEntity extends AbstractBaseEntity {
+
     @NotBlank
     @Size(min = 2, max = 100)
     @Column(name = "name", nullable = false)
@@ -19,7 +21,6 @@ public abstract class AbstractNamedEntity extends AbstractBaseEntity {
     protected String name;
 
     protected AbstractNamedEntity() {
-
     }
 
     protected AbstractNamedEntity(Integer id, String name) {

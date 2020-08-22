@@ -15,6 +15,7 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
 class InMemoryAdminRestControllerTest {
     private static final Logger log = LoggerFactory.getLogger(InMemoryAdminRestControllerTest.class);
+
     private static ConfigurableApplicationContext appCtx;
     private static AdminRestController controller;
     private static InMemoryUserRepository repository;
@@ -23,7 +24,6 @@ class InMemoryAdminRestControllerTest {
     static void beforeClass() {
         appCtx = new ClassPathXmlApplicationContext("spring/inmemory.xml");
         log.info("\n{}\n", Arrays.toString(appCtx.getBeanDefinitionNames()));
-
         controller = appCtx.getBean(AdminRestController.class);
         repository = appCtx.getBean(InMemoryUserRepository.class);
     }
@@ -36,19 +36,19 @@ class InMemoryAdminRestControllerTest {
     }
 
     @BeforeEach
-    void setup() {
+    void setup() throws Exception {
         // re-initialize
         repository.init();
     }
 
     @Test
-    void delete() {
+    void delete() throws Exception {
         controller.delete(USER_ID);
         Assertions.assertNull(repository.get(USER_ID));
     }
 
     @Test
-    public void deleteNotFound() {
+    public void deleteNotFound() throws Exception {
         Assertions.assertThrows(NotFoundException.class, () -> controller.delete(NOT_FOUND));
     }
 }

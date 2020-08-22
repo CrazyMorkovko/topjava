@@ -5,15 +5,18 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class MealTo extends BaseTo {
+
     private final LocalDateTime dateTime;
+
     private final String description;
+
     private final int calories;
+
     private final boolean excess;
 
     @ConstructorProperties({"id", "dateTime", "description", "calories", "excess"})
     public MealTo(Integer id, LocalDateTime dateTime, String description, int calories, boolean excess) {
         super(id);
-
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
@@ -38,17 +41,14 @@ public class MealTo extends BaseTo {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         MealTo that = (MealTo) o;
-        return calories == that.calories && excess == that.excess && Objects.equals(id, that.id) &&
-                Objects.equals(dateTime, that.dateTime) && Objects.equals(description, that.description);
+        return calories == that.calories &&
+                excess == that.excess &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(dateTime, that.dateTime) &&
+                Objects.equals(description, that.description);
     }
 
     @Override

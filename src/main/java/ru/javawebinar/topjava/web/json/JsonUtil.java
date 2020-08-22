@@ -11,9 +11,9 @@ import java.util.Map;
 import static ru.javawebinar.topjava.web.json.JacksonObjectMapper.getMapper;
 
 public class JsonUtil {
+
     public static <T> List<T> readValues(String json, Class<T> clazz) {
         ObjectReader reader = getMapper().readerFor(clazz);
-
         try {
             return reader.<T>readValues(json).readAll();
         } catch (IOException e) {
@@ -42,9 +42,7 @@ public class JsonUtil {
     }
 
     public static <T> String writeAdditionProps(T obj, Map<String, Object> addProps) {
-        Map<String, Object> map = getMapper().convertValue(obj, new TypeReference<>() {
-        });
-
+        Map<String, Object> map = getMapper().convertValue(obj, new TypeReference<Map<String, Object>>() {});
         map.putAll(addProps);
         return writeValue(map);
     }

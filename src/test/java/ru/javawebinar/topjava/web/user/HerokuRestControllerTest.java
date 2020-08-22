@@ -12,7 +12,6 @@ import ru.javawebinar.topjava.util.exception.ErrorType;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 
 import java.io.IOException;
-import java.util.Objects;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -23,6 +22,7 @@ import static ru.javawebinar.topjava.util.exception.ModificationRestrictionExcep
 
 @ActiveProfiles({HEROKU})
 class HerokuRestControllerTest extends AbstractControllerTest {
+
     private static final String REST_URL = AdminRestController.REST_URL + '/';
 
     // Set DATABASE_URL environment for heroku profile
@@ -33,9 +33,9 @@ class HerokuRestControllerTest extends AbstractControllerTest {
             String herokuDbUrl = String.format("postgres://%s:%s@%s",
                     propertySource.getProperty("database.username"),
                     propertySource.getProperty("database.password"),
-                    ((String) Objects.requireNonNull(propertySource.getProperty("database.url"))).substring(18));
-
+                    ((String) propertySource.getProperty("database.url")).substring(18));
             System.out.println(herokuDbUrl);
+
             System.setProperty("DATABASE_URL", herokuDbUrl);
         } catch (IOException e) {
             throw new IllegalStateException(e);

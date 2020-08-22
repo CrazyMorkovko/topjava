@@ -21,13 +21,14 @@ import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 
 public abstract class AbstractUserController {
     protected final Logger log = LoggerFactory.getLogger(getClass());
-    private boolean modificationRestriction;
 
     @Autowired
     private UserService service;
 
     @Autowired
     private UniqueMailValidator emailValidator;
+
+    private boolean modificationRestriction;
 
     @Autowired
     @SuppressWarnings("deprecation")

@@ -12,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/users")
 public class AdminUIController extends AbstractUserController {
+
     @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<User> getAll() {

@@ -9,11 +9,13 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javawebinar.topjava.View;
 import ru.javawebinar.topjava.model.User;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
 @RequestMapping(value = AdminRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdminRestController extends AbstractUserController {
+
     static final String REST_URL = "/rest/admin/users";
 
     @GetMapping
@@ -30,9 +32,10 @@ public class AdminRestController extends AbstractUserController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> createWithLocation(@Validated(View.Web.class) @RequestBody User user) {
         User created = super.create(user);
-        return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentContextPath()
+        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
-                .buildAndExpand(created.getId()).toUri()).body(created);
+                .buildAndExpand(created.getId()).toUri();
+        return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
     @Override

@@ -14,14 +14,16 @@ import java.util.List;
 @Repository
 @Transactional(readOnly = true)
 public class JpaUserRepository implements UserRepository {
-    /*
-        @Autowired
-        private SessionFactory sessionFactory;
 
-        private Session openSession() {
-            return sessionFactory.getCurrentSession();
-        }
-    */
+/*
+    @Autowired
+    private SessionFactory sessionFactory;
+
+    private Session openSession() {
+        return sessionFactory.getCurrentSession();
+    }
+*/
+
     @PersistenceContext
     private EntityManager em;
 
@@ -44,6 +46,7 @@ public class JpaUserRepository implements UserRepository {
     @Override
     @Transactional
     public boolean delete(int id) {
+
 /*      User ref = em.getReference(User.class, id);
         em.remove(ref);
 
@@ -57,10 +60,11 @@ public class JpaUserRepository implements UserRepository {
 
     @Override
     public User getByEmail(String email) {
-        return DataAccessUtils.singleResult(em.createNamedQuery(User.BY_EMAIL, User.class)
+        List<User> users = em.createNamedQuery(User.BY_EMAIL, User.class)
                 .setParameter(1, email)
                 .setHint(QueryHints.HINT_PASS_DISTINCT_THROUGH, false)
-                .getResultList());
+                .getResultList();
+        return DataAccessUtils.singleResult(users);
     }
 
     @Override

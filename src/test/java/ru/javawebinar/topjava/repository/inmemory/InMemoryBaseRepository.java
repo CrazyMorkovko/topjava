@@ -10,7 +10,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
 public class InMemoryBaseRepository<T extends AbstractBaseEntity> {
+
     private static final AtomicInteger counter = new AtomicInteger(START_SEQ);
+
     final Map<Integer, T> map = new ConcurrentHashMap<>();
 
     public T save(T entry) {
@@ -19,7 +21,6 @@ public class InMemoryBaseRepository<T extends AbstractBaseEntity> {
             map.put(entry.getId(), entry);
             return entry;
         }
-
         return map.computeIfPresent(entry.getId(), (id, oldT) -> entry);
     }
 

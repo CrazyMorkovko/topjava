@@ -10,6 +10,7 @@ import java.util.List;
 
 @Repository
 public class DataJpaMealRepository implements MealRepository {
+
     private final CrudMealRepository crudMealRepository;
     private final CrudUserRepository crudUserRepository;
 
@@ -24,7 +25,6 @@ public class DataJpaMealRepository implements MealRepository {
         if (!meal.isNew() && get(meal.getId(), userId) == null) {
             return null;
         }
-
         meal.setUser(crudUserRepository.getOne(userId));
         return crudMealRepository.save(meal);
     }

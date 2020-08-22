@@ -7,17 +7,15 @@ import ru.javawebinar.topjava.AuthorizedUser;
 import static java.util.Objects.requireNonNull;
 
 public class SecurityUtil {
-    private SecurityUtil() {
 
+    private SecurityUtil() {
     }
 
     public static AuthorizedUser safeGet() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
         if (auth == null) {
             return null;
         }
-
         Object principal = auth.getPrincipal();
         return (principal instanceof AuthorizedUser) ? (AuthorizedUser) principal : null;
     }

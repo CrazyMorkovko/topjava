@@ -16,6 +16,7 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/profile")
 public class ProfileUIController extends AbstractUserController {
+
     @GetMapping
     public String profile(ModelMap model, @AuthenticationPrincipal AuthorizedUser authUser) {
         model.addAttribute("userTo", authUser.getUserTo());
@@ -23,16 +24,10 @@ public class ProfileUIController extends AbstractUserController {
     }
 
     @PostMapping
-    public String updateProfile(
-            @Valid UserTo userTo,
-            BindingResult result,
-            SessionStatus status,
-            @AuthenticationPrincipal AuthorizedUser authUser
-    ) {
+    public String updateProfile(@Valid UserTo userTo, BindingResult result, SessionStatus status, @AuthenticationPrincipal AuthorizedUser authUser) {
         if (result.hasErrors()) {
             return "profile";
         }
-
         super.update(userTo, authUser.getId());
         authUser.update(userTo);
         status.setComplete();
@@ -52,7 +47,6 @@ public class ProfileUIController extends AbstractUserController {
             model.addAttribute("register", true);
             return "profile";
         }
-
         super.create(userTo);
         status.setComplete();
         return "redirect:/login?message=app.registered&username=" + userTo.getEmail();

@@ -7,5 +7,4 @@ import static ru.javawebinar.topjava.Profiles.JPA;
 
 @ActiveProfiles(JPA)
 class JpaMealServiceTest extends AbstractMealServiceTest {
-
 }

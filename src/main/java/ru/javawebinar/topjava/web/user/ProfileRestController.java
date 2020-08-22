@@ -11,6 +11,7 @@ import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.to.UserTo;
 
 import javax.validation.Valid;
+import java.net.URI;
 
 @RestController
 @RequestMapping(ProfileRestController.REST_URL)
@@ -31,8 +32,10 @@ public class ProfileRestController extends AbstractUserController {
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<User> register(@Valid @RequestBody UserTo userTo) {
-        return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL).build().toUri()).body(super.create(userTo));
+        User created = super.create(userTo);
+        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(REST_URL).build().toUri();
+        return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)

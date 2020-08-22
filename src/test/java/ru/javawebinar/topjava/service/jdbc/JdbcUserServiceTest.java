@@ -7,5 +7,4 @@ import static ru.javawebinar.topjava.Profiles.JDBC;
 
 @ActiveProfiles(JDBC)
 class JdbcUserServiceTest extends AbstractUserServiceTest {
-
 }

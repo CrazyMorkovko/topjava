@@ -25,8 +25,7 @@ public class TestUtil {
         return JsonUtil.readValue(getContent(result), clazz);
     }
 
-    public static <T> List<T> readListFromJsonMvcResult(MvcResult result, Class<T> clazz)
-            throws UnsupportedEncodingException {
+    public static <T> List<T> readListFromJsonMvcResult(MvcResult result, Class<T> clazz) throws UnsupportedEncodingException {
         return JsonUtil.readValues(getContent(result), clazz);
     }
 
@@ -40,8 +39,6 @@ public class TestUtil {
     }
 
     public static RequestPostProcessor userAuth(User user) {
-        return SecurityMockMvcRequestPostProcessors.authentication(
-                new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
-        );
+        return SecurityMockMvcRequestPostProcessors.authentication(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
     }
 }

@@ -25,6 +25,7 @@ import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 @Service("userService")
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class UserService implements UserDetailsService {
+
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
 
@@ -68,14 +69,14 @@ public class UserService implements UserDetailsService {
     @CacheEvict(value = "users", allEntries = true)
     @Transactional
     public void update(UserTo userTo) {
-        prepareAndSave(UserUtil.updateFromTo(get(userTo.id()), userTo));   // !! need only for JDBC implementation
+        User user = get(userTo.id());
+        prepareAndSave(UserUtil.updateFromTo(user, userTo));   // !! need only for JDBC implementation
     }
 
     @CacheEvict(value = "users", allEntries = true)
     @Transactional
     public void enable(int id, boolean enabled) {
         User user = get(id);
-
         user.setEnabled(enabled);
         repository.save(user);  // !! need only for JDBC implementation
     }
@@ -83,11 +84,9 @@ public class UserService implements UserDetailsService {
     @Override
     public AuthorizedUser loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = repository.getByEmail(email.toLowerCase());
-
         if (user == null) {
             throw new UsernameNotFoundException("User " + email + " is not found");
         }
-
         return new AuthorizedUser(user);
     }
 

@@ -12,6 +12,7 @@ import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 
 public class DateTimeFormatters {
     public static class LocalDateFormatter implements Formatter<LocalDate> {
+
         @Override
         public LocalDate parse(String text, Locale locale) {
             return parseLocalDate(text);
@@ -24,6 +25,7 @@ public class DateTimeFormatters {
     }
 
     public static class LocalTimeFormatter implements Formatter<LocalTime> {
+
         @Override
         public LocalTime parse(String text, Locale locale) {
             return parseLocalTime(text);

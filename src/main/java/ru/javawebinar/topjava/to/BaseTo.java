@@ -6,7 +6,6 @@ public abstract class BaseTo implements HasId {
     protected Integer id;
 
     public BaseTo() {
-
     }
 
     public BaseTo(Integer id) {
