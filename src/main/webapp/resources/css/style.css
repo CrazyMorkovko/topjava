@@ -32,19 +32,19 @@ tr[data-userEnabled="false"] {
     border: 1px solid #9feba6;
 }
 
-/*https://stackoverflow.com/a/53855189/548473*/
 #noty_layout__bottomRight {
     width: 385px !important;
 }
 
-/*https://getbootstrap.com/docs/4.0/examples/sticky-footer/sticky-footer.css*/
 html {
     position: relative;
     min-height: 100%;
 }
+
 body {
     margin-bottom: 60px; /* Margin bottom by footer height */
 }
+
 .footer {
     position: absolute;
     bottom: 0;

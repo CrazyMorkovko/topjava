@@ -23,12 +23,12 @@ import java.util.stream.Collectors;
 @Repository
 public class InMemoryMealRepository implements MealRepository {
     private static final Logger log = LoggerFactory.getLogger(InMemoryMealRepository.class);
-
     // Map  userId -> mealRepository
     private final Map<Integer, InMemoryBaseRepository<Meal>> usersMealsMap = new ConcurrentHashMap<>();
 
     {
         var userMeals = new InMemoryBaseRepository<Meal>();
+
         MealTestData.MEALS.forEach(meal -> userMeals.map.put(meal.getId(), meal));
         usersMealsMap.put(UserTestData.USER_ID, userMeals);
     }
@@ -36,8 +36,7 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public Meal save(Meal meal, int userId) {
-        var meals = usersMealsMap.computeIfAbsent(userId, uid -> new InMemoryBaseRepository<>());
-        return meals.save(meal);
+        return usersMealsMap.computeIfAbsent(userId, uid -> new InMemoryBaseRepository<>()).save(meal);
     }
 
     @PostConstruct
@@ -64,7 +63,10 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
-        return filterByPredicate(userId, meal -> Util.isBetweenHalfOpen(meal.getDateTime(), startDateTime, endDateTime));
+        return filterByPredicate(
+                userId,
+                meal -> Util.isBetweenHalfOpen(meal.getDateTime(), startDateTime, endDateTime)
+        );
     }
 
     @Override

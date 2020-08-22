@@ -12,7 +12,6 @@
 <div class="jumbotron pt-4">
     <div class="container">
         <h3 class="text-center"><spring:message code="meal.title"/></h3>
-        <%--https://getbootstrap.com/docs/4.0/components/card/--%>
         <div class="card border-dark">
             <div class="card-body pb-0">
                 <form id="filter">

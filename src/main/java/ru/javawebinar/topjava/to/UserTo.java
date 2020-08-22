@@ -24,7 +24,7 @@ public class UserTo extends BaseTo implements HasIdAndEmail, Serializable {
     @Email
     @NotBlank
     @Size(max = 100)
-    @SafeHtml(whitelistType = NONE) // https://stackoverflow.com/questions/17480809
+    @SafeHtml(whitelistType = NONE)
     private String email;
 
     @NotBlank
@@ -36,10 +36,12 @@ public class UserTo extends BaseTo implements HasIdAndEmail, Serializable {
     private Integer caloriesPerDay = UserUtil.DEFAULT_CALORIES_PER_DAY;
 
     public UserTo() {
+
     }
 
     public UserTo(Integer id, String name, String email, String password, int caloriesPerDay) {
         super(id);
+
         this.name = name;
         this.email = email;
         this.password = password;

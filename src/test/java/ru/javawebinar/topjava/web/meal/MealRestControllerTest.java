@@ -1,10 +1,8 @@
 package ru.javawebinar.topjava.web.meal;
 
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +29,6 @@ import static ru.javawebinar.topjava.util.exception.ErrorType.VALIDATION_ERROR;
 import static ru.javawebinar.topjava.web.ExceptionInfoHandler.EXCEPTION_DUPLICATE_DATETIME;
 
 class MealRestControllerTest extends AbstractControllerTest {
-
     private static final String REST_URL = MealRestController.REST_URL + '/';
 
     @Autowired
@@ -79,24 +76,23 @@ class MealRestControllerTest extends AbstractControllerTest {
     @Test
     void update() throws Exception {
         Meal updated = MealTestData.getUpdated();
+
         perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID).contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated))
                 .with(userHttpBasic(USER)))
                 .andExpect(status().isNoContent());
-
         MEAL_MATCHER.assertMatch(mealService.get(MEAL1_ID, USER_ID), updated);
     }
 
     @Test
     void createWithLocation() throws Exception {
         Meal newMeal = MealTestData.getNew();
-        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
+        Meal created = readFromJson(perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newMeal))
-                .with(userHttpBasic(USER)));
-
-        Meal created = readFromJson(action, Meal.class);
+                .with(userHttpBasic(USER))), Meal.class);
         int newId = created.id();
+
         newMeal.setId(newId);
         MEAL_MATCHER.assertMatch(created, newMeal);
         MEAL_MATCHER.assertMatch(mealService.get(newId, USER_ID), newMeal);
@@ -133,10 +129,9 @@ class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void createInvalid() throws Exception {
-        Meal invalid = new Meal(null, null, "Dummy", 200);
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(invalid))
+                .content(JsonUtil.writeValue(new Meal(null, null, "Dummy", 200)))
                 .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
@@ -145,10 +140,9 @@ class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void updateInvalid() throws Exception {
-        Meal invalid = new Meal(MEAL1_ID, null, null, 6000);
         perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(invalid))
+                .content(JsonUtil.writeValue(new Meal(MEAL1_ID, null, null, 6000)))
                 .with(userHttpBasic(USER)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
@@ -158,10 +152,9 @@ class MealRestControllerTest extends AbstractControllerTest {
     @Test
     @Transactional(propagation = Propagation.NEVER)
     void updateDuplicate() throws Exception {
-        Meal invalid = new Meal(MEAL1_ID, MEAL2.getDateTime(), "Dummy", 200);
         perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(invalid))
+                .content(JsonUtil.writeValue(new Meal(MEAL1_ID, MEAL2.getDateTime(), "Dummy", 200)))
                 .with(userHttpBasic(USER)))
                 .andDo(print())
                 .andExpect(status().isConflict())
@@ -172,10 +165,9 @@ class MealRestControllerTest extends AbstractControllerTest {
     @Test
     @Transactional(propagation = Propagation.NEVER)
     void createDuplicate() throws Exception {
-        Meal invalid = new Meal(null, ADMIN_MEAL1.getDateTime(), "Dummy", 200);
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(invalid))
+                .content(JsonUtil.writeValue(new Meal(null, ADMIN_MEAL1.getDateTime(), "Dummy", 200)))
                 .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isConflict())
@@ -185,10 +177,9 @@ class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void updateHtmlUnsafe() throws Exception {
-        Meal invalid = new Meal(MEAL1_ID, LocalDateTime.now(), "<script>alert(123)</script>", 200);
         perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(invalid))
+                .content(JsonUtil.writeValue(new Meal(MEAL1_ID, LocalDateTime.now(), "<script>alert(123)</script>", 200)))
                 .with(userHttpBasic(USER)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())

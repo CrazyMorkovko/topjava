@@ -11,7 +11,6 @@ import ru.javawebinar.topjava.View;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
 
-import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -50,12 +49,9 @@ public class MealRestController extends AbstractMealController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Meal> createWithLocation(@Validated(View.Web.class) @RequestBody Meal meal) {
         Meal created = super.create(meal);
-
-        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+        return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
-                .buildAndExpand(created.getId()).toUri();
-
-        return ResponseEntity.created(uriOfNewResource).body(created);
+                .buildAndExpand(created.getId()).toUri()).body(created);
     }
 
     @Override
@@ -64,7 +60,8 @@ public class MealRestController extends AbstractMealController {
             @RequestParam @Nullable LocalDate startDate,
             @RequestParam @Nullable LocalTime startTime,
             @RequestParam @Nullable LocalDate endDate,
-            @RequestParam @Nullable LocalTime endTime) {
+            @RequestParam @Nullable LocalTime endTime
+    ) {
         return super.getBetween(startDate, startTime, endDate, endTime);
     }
 }

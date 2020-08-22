@@ -13,7 +13,6 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
 @SpringJUnitConfig(locations = {"classpath:spring/inmemory.xml"})
 class InMemoryAdminRestControllerSpringTest {
-
     @Autowired
     private AdminRestController controller;
 
@@ -21,18 +20,18 @@ class InMemoryAdminRestControllerSpringTest {
     private InMemoryUserRepository repository;
 
     @BeforeEach
-    void setup() throws Exception {
+    void setup() {
         repository.init();
     }
 
     @Test
-    void delete() throws Exception {
+    void delete() {
         controller.delete(USER_ID);
         Assertions.assertNull(repository.get(USER_ID));
     }
 
     @Test
-    void deleteNotFound() throws Exception {
+    void deleteNotFound() {
         Assertions.assertThrows(NotFoundException.class, () -> controller.delete(NOT_FOUND));
     }
 }

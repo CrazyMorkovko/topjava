@@ -1,4 +1,4 @@
-var mealAjaxUrl = "profile/meals/";
+const mealAjaxUrl = "profile/meals/";
 
 function updateFilteredTable() {
     $.ajax({
@@ -13,11 +13,10 @@ function clearFilter() {
     $.get(mealAjaxUrl, updateTableByData);
 }
 
-// http://api.jquery.com/jQuery.ajax/#using-converters
 $.ajaxSetup({
     converters: {
         "text json": function (stringData) {
-            var json = JSON.parse(stringData);
+            const json = JSON.parse(stringData);
             $(json).each(function () {
                 this.dateTime = this.dateTime.replace('T', ' ').substr(0, 16);
             });
@@ -62,9 +61,8 @@ $(function () {
 
     $.datetimepicker.setLocale(localeCode);
 
-//  http://xdsoft.net/jqplugins/datetimepicker/
-    var startDate = $('#startDate');
-    var endDate = $('#endDate');
+    const startDate = $('#startDate');
+    const endDate = $('#endDate');
     startDate.datetimepicker({
         timepicker: false,
         format: 'Y-m-d',
@@ -86,8 +84,8 @@ $(function () {
         }
     });
 
-    var startTime = $('#startTime');
-    var endTime = $('#endTime');
+    const startTime = $('#startTime');
+    const endTime = $('#endTime');
     startTime.datetimepicker({
         datepicker: false,
         format: 'H:i',

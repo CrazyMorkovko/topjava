@@ -18,7 +18,6 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-
     private final MessageSourceAccessor messageSourceAccessor;
 
     public GlobalExceptionHandler(MessageSourceAccessor messageSourceAccessor) {
@@ -26,30 +25,36 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
-    public ModelAndView wrongRequest(HttpServletRequest req, NoHandlerFoundException e) throws Exception {
+    public ModelAndView wrongRequest(HttpServletRequest req, NoHandlerFoundException e) {
         return logAndGetExceptionView(req, e, false, ErrorType.WRONG_REQUEST, null);
     }
 
     @ExceptionHandler(ApplicationException.class)
-    public ModelAndView applicationErrorHandler(HttpServletRequest req, ApplicationException appEx) throws Exception {
+    public ModelAndView applicationErrorHandler(HttpServletRequest req, ApplicationException appEx) {
         return logAndGetExceptionView(req, appEx, true, appEx.getType(),
                 messageSourceAccessor.getMessage(appEx.getMsgCode(), appEx.getArgs()));
     }
 
     @ExceptionHandler(Exception.class)
-    public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
+    public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) {
         log.error("Exception at request " + req.getRequestURL(), e);
         return logAndGetExceptionView(req, e, true, ErrorType.APP_ERROR, null);
     }
 
-    private ModelAndView logAndGetExceptionView(HttpServletRequest req, Exception e, boolean logException, ErrorType errorType, String msg) {
+    private ModelAndView logAndGetExceptionView(
+            HttpServletRequest req,
+            Exception e,
+            boolean logException,
+            ErrorType errorType,
+            String msg
+    ) {
         Throwable rootCause = ValidationUtil.logAndGetRootCause(log, req, e, logException, errorType);
-
         HttpStatus httpStatus = errorType.getStatus();
         ModelAndView mav = new ModelAndView("exception",
                 Map.of("exception", rootCause, "message", msg != null ? msg : ValidationUtil.getMessage(rootCause),
                         "typeMessage", messageSourceAccessor.getMessage(errorType.getErrorCode()),
                         "status", httpStatus));
+
         mav.setStatus(httpStatus);
         return mav;
     }
